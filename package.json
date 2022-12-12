@@ -3,7 +3,7 @@
   "scripts": {
     "build": "del-cli -f dist/ && rollup --config && cp app.json dist/ && node build_bundle.js dist/",
     "bundle": "node build_bundle.js dist",
-    "test": "node --version"
+    "test": "node src/app.js"
   },
   "type": "module",
   "engines": {

@@ -1,0 +1,137 @@
+{
+  "endpoints": {
+    "/scs/{user_id}": {
+      "get": {
+        "js_module": "app.js",
+        "js_function": "read",
+        "forwarding_required": "always",
+        "authn_policies": ["user_cert"],
+        "mode": "readonly",
+        "openapi": {
+          "responses": {
+            "200": {
+              "description": "Ok"
+            }
+          }          
+        }
+      },
+      "post": {
+        "js_module": "app.js",
+        "js_function": "update",
+        "forwarding_required": "always",
+        "authn_policies": ["user_cert"],
+        "mode": "readwrite",
+        "openapi": {
+          "responses": {
+            "204": {
+              "description": "Ok"
+            }
+          },
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "hash": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/setup/{user_id}": {
+      "post": {
+        "js_module": "app.js",
+        "js_function": "new_scs",
+        "forwarding_required": "always",
+        "authn_policies": ["user_cert"],
+        "mode": "readwrite",
+        "openapi": {
+          "responses": {
+            "204": {
+              "description": "Ok"
+            },
+            "403": {
+              "description": "SCS already exists"
+            }
+          },
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "hash": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/receipt/{user_id}": {
+      "get": {
+        "js_module": "app.js",
+        "js_function": "receipt",
+        "forwarding_required": "always",
+        "authn_policies": ["user_cert"],
+        "mode": "readonly",
+        "openapi": {
+          "responses": {
+            "200": {
+              "description": "Ok"
+            }
+          },
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "hash": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "in": "query",
+              "name": "transaction_id",
+              "required": true
+            }
+          ]
+        }
+      }
+    },
+    "/reset/{user_id}": {
+      "put": {
+        "js_module": "app.js",
+        "js_function": "reset",
+        "forwarding_required": "always",
+        "authn_policies": ["member_cert"],
+        "mode": "readwrite",
+        "openapi": {
+          "responses": {
+            "204": {
+              "description": "Ok"
+            }
+          }
+        }
+      }
+    }
+  }
+}

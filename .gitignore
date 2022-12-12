@@ -1,4 +1,3 @@
-**/build/**
-*.deb
-**/.venv_ccf_sandbox/
-**/workspace/
+package-lock.json
+node_modules/
+dist/

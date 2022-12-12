@@ -1,32 +1,36 @@
 {
     "enclave": {
-      "file": "/usr/lib/ccf/libjs_generic.virtual.so",
+      "file": "/opt/ccf_virtual/lib/libjs_generic.virtual.so",
       "type": "Virtual"
     },
     "network": {
       "node_to_node_interface": { "bind_address": "127.0.0.1:8081" },
       "rpc_interfaces": {
-        "main_interface": {
+        "primary_rpc_interface": {
           "bind_address": "0.0.0.0:8080"
         }
       }
     },
     "command": {
       "type": "Start",
-      "service_certificate_file": "/app/service_cert.pem",
+      "service_certificate_file": "/app/workspace/sandbox_common/service_cert.pem",
       "start": {
         "constitution_files": [
-          "/app/validate.js",
-          "/app/apply.js",
-          "/app/resolve.js",
-          "/app/actions.js"
+          "/app/workspace/sandbox_common/validate.js",
+          "/app/workspace/sandbox_common/apply.js",
+          "/app/workspace/sandbox_common/resolve.js",
+          "/app/workspace/sandbox_common/actions.js"
         ],
         "members": [
           {
-            "certificate_file": "/app/member0_cert.pem",
-            "encryption_public_key_file": "/app/member0_enc_pubk.pem"
+            "certificate_file": "/app/workspace/sandbox_common/member0_cert.pem",
+            "encryption_public_key_file": "/app/workspace/sandbox_common/member0_enc_pubk.pem"
           }
         ]
       }
+    },
+    "node_certificate": {
+      "subject_alt_names": ["dNSName:ccf", "dNSName:localhost", "iPAddress:0.0.0.0", "iPAddress:127.0.0.1"]
     }
+
   }
