@@ -394,7 +394,7 @@ $ export NODE_NUM=0
 $ ./start.sh
 ```
 
-* In a seperate terminal run node
+* In a seperate terminal run test
 ```bash
 $ ./test.sh
 ```
@@ -425,7 +425,7 @@ $ export NODE_NUM=<1 or 2>
 $ ./start.sh
 ```
 
-* In a seperate terminal run node
+* In a seperate terminal run test
 ```bash
 $ ./test.sh
 ```
