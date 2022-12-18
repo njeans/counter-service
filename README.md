@@ -17,7 +17,7 @@
   - [Cleanup](#cleanup)
     - [1 Node Network](#1-node-network-2)
     - [3 Node Network](#3-node-network-2)
-  - [Run Run SCS JS app locally (untested)](#run-run-scs-js-app-locally-untested)
+  - [Run SCS JS app locally (untested)](#run-scs-js-app-locally-untested)
     - [Dependencies](#dependencies)
     - [1 Node](#1-node-2)
     - [3 Node](#3-node)
@@ -317,7 +317,7 @@ $ docker exec scs-{virtual or sgx}-0 ./redeploy.sh 1
 
 ```bash
 $ cd docker
-$ docker-compose exec ccf0 ./redeploy.sh 2 <number of majority members>
+$ docker-compose exec ccf0 ./redeploy.sh 2 (number of majority members)
 ```
 
 
@@ -340,7 +340,7 @@ $ rm -rf $(pwd)/sandbox/*
 ```
 
 
-## Run Run SCS JS app locally (untested)
+## Run SCS JS app locally (untested)
 
 ### Dependencies
 * nodejs 14
