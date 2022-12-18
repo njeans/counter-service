@@ -32,11 +32,12 @@ then
     else 
         echo "~~~~~~~~~~~~~~~~~~~~~~Node 0 is starting the network localy~~~~~~~~~~~~~~~~~~~~~~~~"
         ccf_addr=localhost:8546 
-        sandbox_dir=../sandbox_common
-        shared_dir=../shared
-        config_file="../config/cchost_config_${platform}_js_local_start.json"
-        workspace_dir=../workspace/workspace0
-        app_dir=../.
+        start_dir=$(pwd)
+        sandbox_dir="$start_dir/../sandbox_common"
+        shared_dir="$start_dir/../shared"
+        config_file="$start_dir/../config/cchost_config_${platform}_js_local_start.json"
+        workspace_dir="$start_dir/../workspace/workspace0"
+        app_dir="$start_dir/../."
     fi
     mkdir -p $sandbox_dir
     rm -rf $sandbox_dir/member*
@@ -57,8 +58,9 @@ else
         workspace_dir="/workspace/workspace${NODE_NUM}"
     else 
         echo "~~~~~~~~~~~~~~~~~~~~~~Node $NODE_NUM is joining the network locally~~~~~~~~~~~~~~~~~~~~~~~~"
-        config_file="../config/cchost_config_${platform}_js_local_join_${NODE_NUM}.json"
-        workspace_dir="../workspace/workspace${NODE_NUM}"
+        start_dir=$(pwd)
+        config_file="$start_dir/../config/cchost_config_${platform}_js_local_join_${NODE_NUM}.json"
+        workspace_dir="$start_dir/../workspace/workspace${NODE_NUM}"
     fi
     mkdir -p $workspace_dir
     rm -rf $workspace_dir/*

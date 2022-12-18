@@ -232,6 +232,17 @@ $ docker-compose up -d
 * edit [docker-compose.yaml Line 16](docker/docker-compose.yaml#L16) to change number of members and users
 
 ### SGX  (untested)
+
+You may need to change devices to (this includes the [docker-compose-sgx.yaml](docker/docker-compose-sgx.yaml))
+
+* `/dev/sgx_enclave` -> `/dev/sgx/enclave`
+* `/dev/sgx_provision` -> `/dev/sgx/provision`
+
+OR use only
+
+* `/dev/isgx`
+
+
 #### 1 Node
 ```bash
 $ docker build -t scs-sgx --build-arg platform=sgx -f docker/Dockerfile .
@@ -246,10 +257,10 @@ $	-p 8546:8080 scs-sgx <optional cmd> (default: "--members 1 --users 2 --nodes 1
 #### 3 Nodes
 ```bash
 $ cd docker
-$ docker-compose build -f docker-compose-sgx.yaml
-$ docker-compose up -d -f docker-compose-sgx.yaml
+$ docker-compose -f docker-compose-sgx.yaml build
+$ docker-compose -f docker-compose-sgx.yaml up -d
 ```
-* edit [docker-compose-sgx.yaml Line 29](docker/docker-compose-sgx.yaml#L29) to change number of members and users
+* edit [docker-compose-sgx.yaml Line 28](docker/docker-compose-sgx.yaml#L29) to change number of members and users
 
 
 ## Run tests
@@ -333,7 +344,7 @@ $ rm -rf $(pwd)/sandbox/*
 ### 3 Node Network
 ```bash
 $ cd docker
-$ docker-compose down {-f docker-compose-sgx.yaml}
+$ docker-compose {-f docker-compose-sgx.yaml} down 
 $ cd ..
 $ rm -rf $(pwd)/workspace/*
 $ rm -rf $(pwd)/sandbox/*

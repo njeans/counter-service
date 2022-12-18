@@ -1,0 +1,118 @@
+version: '3.9'
+
+
+services:
+  aesm:
+    image: initc3/linux-sgx:2.17.1
+    devices:
+      # - /dev/sgx/enclave
+      # - /dev/sgx/provision
+      - /dev/sgx_enclave
+      - /dev/sgx_provision
+      # - /dev/isgx
+    volumes:
+      - aesmd-socket:/var/run/aesmd
+    user: aesmd
+    working_dir: /opt/intel/sgx-aesm-service/aesm
+    environment:
+      LD_LIBRARY_PATH: /opt/intel/sgx-aesm-service/aesm
+    command: ./aesm_service --no-daemon
+
+  ccf0:
+    image: scs-sgx
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+      args:
+        platform: sgx
+    hostname: ccf0
+    domainname: ccf0
+    ports:
+      - 8546:8080
+    command: ["--members", "3", "--users", "2", "--nodes", "3"]
+    environment:
+      deployment_location: DOCKER
+      NODE_NUM: "0"
+      platform: sgx
+    depends_on:
+      - aesm
+    devices:
+      # - /dev/sgx/enclave
+      - /dev/sgx_enclave
+      # - /dev/isgx
+    volumes:
+      # - ../scripts:/app/scripts
+      - ../src:/app/src
+      - ../app.json:/app/app.json
+      # - sandbox_common_sgx:/sandbox_common
+      - ../sandbox:/sandbox_common
+      # - workspace_sgx:/workspace/workspace0
+      - ../workspace/workspace0:/workspace/workspace0
+
+
+  ccf1:
+    image: scs-sgx
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+      args:
+        platform: sgx
+    hostname: ccf1
+    domainname: ccf1
+    environment:
+      deployment_location: DOCKER
+      NODE_NUM: "1"
+      platform: sgx
+    depends_on:
+      aesm:
+        condition: service_started
+      ccf0:
+        condition: service_healthy
+    devices:
+      # - /dev/sgx/enclave
+      - /dev/sgx_enclave
+      # - /dev/isgx
+    volumes:
+      # - sandbox_common_sgx:/sandbox_common
+      - ../sandbox:/sandbox_common
+      # - workspace_sgx:/workspace/workspace1
+      - ../workspace/workspace1:/workspace/workspace1
+
+  ccf2:
+    image: scs-sgx
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+      args:
+        platform: sgx
+    hostname: ccf2
+    domainname: ccf2
+    depends_on:
+      aesm:
+        condition: service_started
+      ccf0:
+        condition: service_healthy
+    environment:
+      deployment_location: DOCKER
+      NODE_NUM: "2"
+      platform: sgx
+    devices:
+      # - /dev/sgx/enclave
+      - /dev/sgx_enclave
+      # - /dev/isgx
+    volumes:
+      # - sandbox_common_sgx:/sandbox_common
+      - ../sandbox:/sandbox_common
+      # - workspace_sgx:/workspace/workspace2
+      - ../workspace/workspace2:/workspace/workspace2
+
+
+volumes:
+  # sandbox_common_sgx:
+  # workspace_sgx:
+  aesmd-socket:
+    driver: local
+    driver_opts:
+      type: "tmpfs"
+      device: "tmpfs"
+      o: "rw"

@@ -1,0 +1,52 @@
+{
+  "enclave": {
+    "file": "/opt/ccf/lib/libjs_generic.enclave.so.signed",
+    "platform": "SGX",
+    "type": "Release"
+  },
+  "network": {
+    "node_to_node_interface": { 
+      "bind_address": "0.0.0.0:8547" 
+    },
+    "rpc_interfaces": {
+      "primary_rpc_interface": {
+        "bind_address": "0.0.0.0:8546"
+      }
+    }
+  },
+  "command": {
+    "type": "Start",
+    "service_certificate_file": "../../sandbox_common/service_cert.pem",
+    "start": {
+      "constitution_files": [
+        "../../shared/validate.js",
+        "../../shared/apply.js",
+        "../../shared/resolve.js",
+        "../../shared/actions.js"
+      ],
+      "service_configuration":
+      {
+        "recovery_threshold": 0,
+        "maximum_node_certificate_validity_days": 365,
+        "maximum_service_certificate_validity_days": 365,
+        "reconfiguration_type": "OneTransaction"
+      },
+      "initial_service_certificate_validity_days": 365,
+      "members": [
+        {
+          "certificate_file": "../../sandbox_common/member0_cert.pem",
+          "encryption_public_key_file": "../../sandbox_common/member0_enc_pubk.pem"
+        }
+      ]
+    }
+  },
+  "node_certificate": {
+    "subject_alt_names": ["dNSName:localhost", "iPAddress:0.0.0.0", "iPAddress:127.0.0.1"]
+  },
+  "output_files": {
+    "node_certificate_file": "../../sandbox_common/nodecert0.pem",
+    "pid_file": "node.pid",
+    "node_to_node_address_file": "../../sandbox_common/0.node_address",
+    "rpc_addresses_file" : "../../sandbox_common/0.rpc_addresses"
+  }
+}

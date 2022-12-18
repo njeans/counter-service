@@ -1,8 +1,8 @@
 {
   "enclave": {
-    "file": "/usr/lib/ccf/libjs_generic.virtual.so",
-    "platform": "Virtual",
-    "type": "Virtual"
+    "file": "/opt/ccf/lib/libjs_generic.enclave.so.signed",
+    "platform": "SGX",
+    "type": "Release"
   },
   "network": {
     "node_to_node_interface": { 
