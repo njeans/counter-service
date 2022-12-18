@@ -1,0 +1,32 @@
+{
+  "enclave": {
+    "file": "/usr/lib/ccf/libjs_generic.virtual.so",
+    "platform": "Virtual",
+    "type": "Virtual"
+  },
+  "network": {
+    "node_to_node_interface": { 
+      "published_address": "ccf2:8081",
+      "bind_address": "0.0.0.0:8081" 
+    },
+    "rpc_interfaces": {
+      "2_rpc_interface": {
+        "published_address": "ccf2:8080",
+        "bind_address": "0.0.0.0:8080"
+      }
+    }
+  },
+  "command": {
+    "type": "Join",
+    "service_certificate_file": "/sandbox_common/service_cert.pem",
+    "join": {
+      "target_rpc_address": "ccf0:8080"
+    }
+  },
+  "node_certificate": {
+    "subject_alt_names": ["dNSName:ccf2", "dNSName:localhost", "iPAddress:0.0.0.0", "iPAddress:127.0.0.1"]
+  },
+  "output_files": {
+    "node_certificate_file": "/sandbox_common/nodecert2.pem"
+  }
+}

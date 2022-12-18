@@ -35,14 +35,18 @@ function concatBuf(buffer1, buffer2) {
   return buf;
 };
 
-function validate_user_id(userId) {
+function validate_user_id(userId, cert) {
   // Check if user exists
   // https://microsoft.github.io/CCF/main/audit/builtin_maps.html#users-info
   const usersCerts = ccfapp.typedKv(
     "public:ccf.gov.users.certs",
     ccfapp.arrayBuffer,
-    ccfapp.arrayBuffer
+    ccfapp.string
   );
+  console.log(usersCerts.get(userId), "\n", cert);
+  if (cert != undefined) {
+    return usersCerts.has(userId) && usersCerts.get(userId) == cert;
+  }
   return usersCerts.has(userId);
 }
 
@@ -82,18 +86,28 @@ function parse_request_query(request) {
 
 export function update(request) {
   const userId = ccf.strToBuf(request.params.user_id);
-  if (!validate_user_id(userId)) {
+  if (!validate_user_id(userId, request.caller.cert)) {
     return {
       statusCode: 404,
     };
   }
-  const params = request.body.json();
+
+  let params;
+  try {
+    params = request.body.json();
+  } catch {
+    return {
+      statusCode: 400,
+    };
+  }
+
   if (params.hash === undefined) {
     return { 
       statusCode: 400,
       body: { error: "Missing body parameter 'hash'" } 
     };
   }
+
   if (!validate_hash(params.hash)) {
     return {
       statusCode: 400,
@@ -128,9 +142,9 @@ export function update(request) {
 
 export function read(request) {
   const userId = ccf.strToBuf(request.params.user_id);
-  if (!validate_user_id(userId)) {
+  if (!validate_user_id(userId, request.caller.cert)) {
     return {
-      statusCode: 404,
+      statusCode: 403,
     };
   }
   const currentSCSTable = ccfapp.typedKv(
@@ -151,13 +165,21 @@ export function read(request) {
 
 export function new_scs(request) {
   const userId = ccf.strToBuf(request.params.user_id);
-  if (!validate_user_id(userId)) {
+  if (!validate_user_id(userId, request.caller.cert)) {
     return {
       statusCode: 403,
     };
   }
 
-  const params = request.body.json();
+  let params;
+  try {
+    params = request.body.json();
+  } catch {
+    return {
+      statusCode: 400,
+    };
+  }
+
   if (params.hash === undefined) {
     return {
       statusCode: 400,
@@ -180,7 +202,7 @@ export function new_scs(request) {
   const record = currentSCSTable.get("hash_0");
   if (record != undefined) {
     return {
-      statusCode: 404,
+      statusCode: 403,
       body: { error: `Record for userId: \"${request.params.user_id}\" already exists` } 
     };
   }
@@ -199,7 +221,7 @@ export function new_scs(request) {
 
 export function receipt(request) {
   const userId = ccf.strToBuf(request.params.user_id);
-  if (!validate_user_id(userId)) {
+  if (!validate_user_id(userId, request.caller.cert)) {
     return {
       statusCode: 404,
     };
@@ -265,7 +287,6 @@ export function receipt(request) {
   const record_name = "hash_" + count.toString(); 
 
   console.log(`return receipt for user ${request.params.user_id} tx_id: ${transactionId} ${record_name}: ${buf2Hex(latest_hash)}`);
-
   const receipt = states[0].receipt;
   const body = {
     cert: receipt.cert,

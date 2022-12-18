@@ -1,0 +1,77 @@
+version: '3.9'
+
+
+services:
+  ccf0:
+    image: scs-virtual
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+      args:
+        platform: virtual
+    hostname: ccf0
+    domainname: ccf0
+    ports:
+      - 8546:8080
+    command: ["--members", "3", "--users", "2", "--nodes", "3"]
+    environment:
+      deployment_location: DOCKER
+      NODE_NUM: "0"
+      platform: virtual
+    volumes:
+      # - ../scripts:/app/scripts
+      - ../src:/app/src
+      - ../app.json:/app/app.json
+      # - sandbox_common:/sandbox_common
+      - ../sandbox:/sandbox_common
+      # - workspace:/workspace/workspace0
+      - ../workspace/workspace0:/workspace/workspace0
+
+
+  ccf1:
+    image: scs-virtual
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+      args:
+        platform: virtual
+    hostname: ccf1
+    domainname: ccf1
+    environment:
+      deployment_location: DOCKER
+      NODE_NUM: "1"
+      platform: virtual
+    depends_on:
+      ccf0:
+        condition: service_healthy
+    volumes:
+      # - sandbox_common:/sandbox_common
+      - ../sandbox:/sandbox_common
+      # - workspace:/workspace/workspace1
+      - ../workspace/workspace1:/workspace/workspace1
+
+  ccf2:
+    image: scs-virtual
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+      args:
+        platform: virtual
+    hostname: ccf2
+    domainname: ccf2
+    depends_on:
+      ccf0:
+        condition: service_healthy
+    environment:
+      deployment_location: DOCKER
+      NODE_NUM: "2"
+      platform: virtual
+    volumes:
+      # - sandbox_common:/sandbox_common
+      - ../sandbox:/sandbox_common
+      # - workspace:/workspace/workspace2
+      - ../workspace/workspace2:/workspace/workspace2
+
+# volumes:
+  # sandbox_common:
+  # workspace:
