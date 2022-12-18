@@ -274,25 +274,25 @@ Running tests from inside docker container
 
 
 Testing /app/scs/<userid> GET path failure cases
-	✅ [Pass]: /app/scs/<userid> GET on nonexistant user
-	✅ [Pass]: /app/setup/<userid> GET with incorrect userid
+	✅ [Pass]: /app/scs/<userid> GET fails on nonexistant user
+	✅ [Pass]: /app/setup/<userid> GET fails with incorrect userid
 
 
 Testing /app/setup/<userid> POST path
-	✅ [Pass]: /app/setup/<userid> POST with incorrect userid
-	✅ [Pass]: /app/setup/<userid> POST with inconsistant userid and credentials
-	✅ [Pass]: /app/setup/<userid> POST with invalid hash
+	✅ [Pass]: /app/setup/<userid> POST fails with incorrect userid
+	✅ [Pass]: /app/setup/<userid> POST fails with inconsistant userid and credentials
+	✅ [Pass]: /app/setup/<userid> POST fails with invalid hash
 	✅ [Pass]: /app/setup/<userid> POST
-	✅ [Pass]: /app/setup/<userid> POST existing user
+	✅ [Pass]: /app/setup/<userid> POST fails with existing user
 
 
 Testing /app/scs/<userid> GET path
 	✅ [Pass]: /app/scs/<userid> GET
-	✅ [Pass]: /app/scs/<userid> GET with inconsistant userid and credentials
+	✅ [Pass]: /app/scs/<userid> GET fails with inconsistant userid and credentials
 
 
 Testing /app/scs/<userid> POST path
-	✅ [Pass]: /app/scs/<userid> POST with invalid hash
+	✅ [Pass]: /app/scs/<userid> POST fails with invalid hash
 	✅ [Pass]: /app/scs/<userid> POST
 	✅ [Pass]: /app/scs/<userid> POST result
 
@@ -302,13 +302,13 @@ Testing /app/receipt/<userid> GET path
 
 
 Testing /app/reset path
-	✅ [Pass]: /app/reset/<userid> with user credentials
+	✅ [Pass]: /app/reset/<userid> fails with user credentials
 	✅ [Pass]: /app/reset/<userid> with member credentials
-	✅ [Pass]: /app/reset/<userid> user0 data deleted
+	✅ [Pass]: /app/reset/<userid> fails when data already deleted
 
 
 Testing /app/reset/<userid> GET path failures (after reset)
-	✅ [Pass]: /app/reset/<userid> GET on nonexistant user (after reset)
+	✅ [Pass]: /app/reset/<userid> GET fails on nonexistant user (after reset)
 ```
 
 ### 3 Node Network

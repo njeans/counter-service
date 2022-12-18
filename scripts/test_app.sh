@@ -62,24 +62,24 @@ cert_arg() {
 echo -e "\n\nTesting /app/scs/<userid> GET path failure cases"
 
 status="$(curl "$ccf_server/app/scs/$user1_id" -X GET $(cert_arg "user1") $only_status_code)"
-check_status "/app/scs/<userid> GET on nonexistant user" "404" "$status"
+check_status "/app/scs/<userid> GET fails on nonexistant user" "404" "$status"
 
 status="$(curl "$ccf_server/app/scs/$user_fake" -X GET $(cert_arg "user0") $only_status_code)"
-check_status "/app/setup/<userid> GET with incorrect userid" "403" "$status"
+check_status "/app/setup/<userid> GET fails with incorrect userid" "403" "$status"
 
 
 echo -e "\n\nTesting /app/setup/<userid> POST path"
 
 status="$(curl "$ccf_server/app/setup/$user_fake" -X POST --data "{\"hash\": \"$hash_0\"}" $(cert_arg "user0") $only_status_code)"
-check_status "/app/setup/<userid> POST with incorrect userid" "403" $status
+check_status "/app/setup/<userid> POST fails with incorrect userid" "403" $status
 
 status="$(curl "$ccf_server/app/setup/$user1_id" -s -X POST --data "{\"hash\": \"$hash_0\"}" $(cert_arg "user0") $only_status_code)"
-check_status "/app/setup/<userid> POST with inconsistant userid and credentials" "403" $status
+check_status "/app/setup/<userid> POST fails with inconsistant userid and credentials" "403" $status
 
 curl "$ccf_server/app/setup/$user0_id" -s -X POST --data '{"hash": "hello world"}'  $(cert_arg "user0") > out.json 
 error="$(cat out.json | jq .error)"
 expect="\"Invalid hash\""
-check_eq "/app/setup/<userid> POST with invalid hash" "$expect" "$error"
+check_eq "/app/setup/<userid> POST fails with invalid hash" "$expect" "$error"
 
 status="$(curl "$ccf_server/app/setup/$user0_id" -X POST --data "{\"hash\": \"$hash_0\"}"  $(cert_arg "user0") $only_status_code)"
 check_status "/app/setup/<userid> POST" "204" $status
@@ -87,7 +87,7 @@ check_status "/app/setup/<userid> POST" "204" $status
 curl "$ccf_server/app/setup/$user0_id" -s -X POST --data "{\"hash\": \"$hash_1\"}"   $(cert_arg "user0")  > out.json 
 error=$(cat out.json| jq .error) 
 expect="\"Record for userId: \\\"$user0_id\\\" already exists\""
-check_eq "/app/setup/<userid> POST existing user" "$expect" "$error"
+check_eq "/app/setup/<userid> POST fails with existing user" "$expect" "$error"
 
 
 echo -e "\n\nTesting /app/scs/<userid> GET path"
@@ -97,14 +97,14 @@ check_eq "/app/scs/<userid> GET" "\"$hash_0\"" "$ret_hash"
 
 # curl "$ccf_server/app/scs/$user0_id" -s -X GET -H "Content-Type:application/json" --cacert "$CERT_PATH/service_cert.pem" --cert "$CERT_PATH/user1_cert.pem" --key "$CERT_PATH/user1_privk.pem" | jq .
 status="$(curl "$ccf_server/app/scs/$user0_id" -s -X GET $(cert_arg "user1") $only_status_code)"
-check_status "/app/scs/<userid> GET with inconsistant userid and credentials" "403" $status
+check_status "/app/scs/<userid> GET fails with inconsistant userid and credentials" "403" $status
 
 
 echo -e "\n\nTesting /app/scs/<userid> POST path"
 curl "$ccf_server/app/scs/$user0_id" -s -X POST --data '{"hash": "goodbye"}' $(cert_arg "user0") > out.json
 error=$(cat out.json| jq .error) 
 expect="\"Invalid hash\""
-check_eq "/app/scs/<userid> POST with invalid hash" "$expect" "$error"
+check_eq "/app/scs/<userid> POST fails with invalid hash" "$expect" "$error"
 
 status="$(curl "$ccf_server/app/scs/$user0_id" -X POST -i --data "{\"hash\": \"$hash_1\"}" $(cert_arg "user0") $only_status_code)"
 check_status "/app/scs/<userid> POST" "200" $status
@@ -139,14 +139,14 @@ check_eq "Verify receipt" "OK" "$verify_res"
 echo -e "\n\nTesting /app/reset path"
 
 status="$(curl "$ccf_server/app/reset/$user0_id" -X PUT $(cert_arg "user0") $only_status_code)"
-check_status "/app/reset/<userid> with user credentials" "401" $status
+check_status "/app/reset/<userid> fails with user credentials" "401" $status
 
 status="$(curl "$ccf_server/app/reset/$user0_id" -X PUT $(cert_arg "member0") $only_status_code)"
 check_status "/app/reset/<userid> with member credentials" "202" $status
 
 status="$(curl "$ccf_server/app/reset/$user0_id" -X PUT $(cert_arg "user0") $only_status_code)"
-check_status "/app/reset/<userid> user0 data deleted" "401" $status
+check_status "/app/reset/<userid> fails when data already deleted" "401" $status
 
 echo -e "\n\nTesting /app/reset/<userid> GET path failures (after reset)"
 status="$(curl "$ccf_server/app/scs/$user0_id" -X GET $(cert_arg "user0") $only_status_code)"
-check_status "/app/reset/<userid> GET on nonexistant user (after reset)" "404" $status
+check_status "/app/reset/<userid> GET fails on nonexistant user (after reset)" "404" $status

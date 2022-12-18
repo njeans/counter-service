@@ -19,7 +19,7 @@ services:
       NODE_NUM: "0"
       platform: virtual
     volumes:
-      # - ../scripts:/app/scripts
+      - ../scripts:/app/scripts
       - ../src:/app/src
       - ../app.json:/app/app.json
       # - sandbox_common:/sandbox_common

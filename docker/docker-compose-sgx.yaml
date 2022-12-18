@@ -41,7 +41,7 @@ services:
       - /dev/sgx_enclave
       # - /dev/isgx
     volumes:
-      # - ../scripts:/app/scripts
+      - ../scripts:/app/scripts
       - ../src:/app/src
       - ../app.json:/app/app.json
       # - sandbox_common_sgx:/sandbox_common
