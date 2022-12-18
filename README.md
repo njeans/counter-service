@@ -260,7 +260,7 @@ $ cd docker
 $ docker-compose -f docker-compose-sgx.yaml build
 $ docker-compose -f docker-compose-sgx.yaml up -d
 ```
-* edit [docker-compose-sgx.yaml Line 28](docker/docker-compose-sgx.yaml#L29) to change number of members and users
+* edit [docker-compose-sgx.yaml Line 32](docker/docker-compose-sgx.yaml#L32) to change number of members and users
 
 
 ## Run tests
