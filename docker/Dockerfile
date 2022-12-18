@@ -37,7 +37,7 @@ ENV deployment_location "DOCKER"
 ENV NODE_NUM "0"
 
 # Note: libjs_generic.virtual is not included in run-js container
-COPY --from=builder-virtual /opt/ccf_virtual/lib/libjs_generic.virtual.so /usr/lib/ccf
+COPY --from=builder-virtual /opt/ccf_virtual/lib/libjs_generic.virtual.so /opt/ccf_virtual/lib/libjs_generic.virtual.so
 RUN cp -r /opt/ccf_${platform}  /opt/ccf
 HEALTHCHECK CMD curl --fail https://localhost:8080/node/commit --cacert /sandbox_common/service_cert.pem || exit 1
 
@@ -50,7 +50,6 @@ COPY . /app/
 COPY ./config/cchost_config_${platform}_js_docker_start.json /app/config/config_start.json
 COPY ./config/cchost_config_${platform}_js_docker_join_1.json /app/config/config_join_1.json
 COPY ./config/cchost_config_${platform}_js_docker_join_2.json /app/config/config_join_2.json
-
 WORKDIR /app/
 RUN npm install
 RUN npm run build

@@ -233,7 +233,7 @@ $ docker-compose up -d
 
 ### SGX  (untested)
 
-You may need to change devices to (this includes the [docker-compose-sgx.yaml](docker/docker-compose-sgx.yaml))
+You may need to change devices to (this includes the [docker-compose-sgx.yaml](docker/docker-compose-sgx.yaml)) ????
 
 * `/dev/sgx_enclave` -> `/dev/sgx/enclave`
 * `/dev/sgx_provision` -> `/dev/sgx/provision`
@@ -348,6 +348,12 @@ $ docker-compose {-f docker-compose-sgx.yaml} down
 $ cd ..
 $ rm -rf $(pwd)/workspace/*
 $ rm -rf $(pwd)/sandbox/*
+$ # or if you used volumes
+$ docker volume rm scs_sandbox_common
+$ docker volume rm scs_workspace
+$ # sgx volumes
+$ docker volume rm scs_sandbox_common_sgx
+$ docker volume rm scs_workspace_sgx
 ```
 
 
